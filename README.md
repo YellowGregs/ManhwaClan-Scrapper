@@ -73,17 +73,32 @@ GET https://manhwa-clan.vercel.app/api/solo-leveling/details
 ```
 
 ### Search
-- **Endpoint:** `GET` `/api/search/:query`
+- **Endpoint:** `GET` `/api/search/:query/:page`
 
 **Example Request:**
 ```
-GET https://manhwa-clan.vercel.app/api/search/solo
+GET https://manhwa-clan.vercel.app/api/search/solo/1
 ```
 
-**Example Response:**
+**Example Response (Page 1):**
 ```json
 {
   "results": [
+    {
+      "title": "I’m a Solo Guide",
+      "url": "https://manhwaclan.com/manga/im-a-solo-guide/",
+      "apiUrl": "https://manhwa-clan.vercel.app/api/i%E2%80%99m-a-solo-guide/details"
+    },
+    {
+      "title": "Solo Reincarnation",
+      "url": "https://manhwaclan.com/manga/solo-reincarnation/",
+      "apiUrl": "https://manhwa-clan.vercel.app/api/solo-reincarnation/details"
+    },
+    {
+      "title": "Solo Leveling: Ragnarok",
+      "url": "https://manhwaclan.com/manga/solo-leveling-ragnarok/",
+      "apiUrl": "https://manhwa-clan.vercel.app/api/solo-leveling%3A-ragnarok/details"
+    },
     {
       "title": "Solo Eating",
       "url": "https://manhwaclan.com/manga/solo-eating/",
@@ -105,6 +120,11 @@ GET https://manhwa-clan.vercel.app/api/search/solo
       "apiUrl": "https://manhwa-clan.vercel.app/api/solo-max-level-newbie/details"
     },
     {
+      "title": "The Supporting Duck Waiting for the Breakup",
+      "url": "https://manhwaclan.com/manga/the-supporting-duck-waiting-for-the-breakup/",
+      "apiUrl": "https://manhwa-clan.vercel.app/api/the-supporting-duck-waiting-for-the-breakup/details"
+    },
+    {
       "title": "The Indomitable Martial King",
       "url": "https://manhwaclan.com/manga/the-indomitable-martial-king/",
       "apiUrl": "https://manhwa-clan.vercel.app/api/the-indomitable-martial-king/details"
@@ -113,28 +133,16 @@ GET https://manhwa-clan.vercel.app/api/search/solo
       "title": "The Last Adventurer",
       "url": "https://manhwaclan.com/manga/the-last-adventurer/",
       "apiUrl": "https://manhwa-clan.vercel.app/api/the-last-adventurer/details"
-    },
-    {
-      "title": "The Regressed Son of a Duke is an Assassin",
-      "url": "https://manhwaclan.com/manga/the-regressed-son-of-a-duke-is-an-assassin/",
-      "apiUrl": "https://manhwa-clan.vercel.app/api/the-regressed-son-of-a-duke-is-an-assassin/details"
-    },
-    {
-      "title": "Level Up with Skills",
-      "url": "https://manhwaclan.com/manga/level-up-with-skills/",
-      "apiUrl": "https://manhwa-clan.vercel.app/api/level-up-with-skills/details"
-    },
-    {
-      "title": "Mr Devourer, Please Act Like a Final Boss",
-      "url": "https://manhwaclan.com/manga/mr-devourer-please-act-like-a-final-boss/",
-      "apiUrl": "https://manhwa-clan.vercel.app/api/mr-devourer,-please-act-like-a-final-boss/details"
-    },
-    {
-      "title": "F-Class Destiny Hunter",
-      "url": "https://manhwaclan.com/manga/f-class-destiny-hunter/",
-      "apiUrl": "https://manhwa-clan.vercel.app/api/f-class-destiny-hunter/details"
     }
-  ]
+  ],
+  "pagination": {
+    "currentPage": 1,
+    "totalPages": 3,
+    "nextPage": "https://manhwaclan.com/?s=solo&post_type=wp-manga&page=2",
+    "UrlApi_Next": "https://manhwa-clan.vercel.app/api/search/solo/2",
+    "prevPage": null,
+    "UrlApi_Prev": null
+  }
 }
 ```
 
