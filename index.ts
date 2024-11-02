@@ -140,8 +140,8 @@ async function fetchDetails(title: string) {
   }
 }
 
-async function search(query: string) {
-  const url = `https://manhwaclan.com/?s=${encodeURIComponent(query)}&post_type=wp-manga`;
+async function search(query: string, page: number) {
+  const url = `https://manhwaclan.com/?s=${encodeURIComponent(query)}&post_type=wp-manga&page=${page}`;
   try {
     const { data } = await axios.get(url, { headers: Custom_headers() });
     const $ = cheerio.load(data);
@@ -159,11 +159,35 @@ async function search(query: string) {
       }
     });
 
+    const currentPage = page;
+    const totalPages = parseInt($('.wp-pagenavi .pages').text().match(/of (\d+)/)?.[1] ?? '0', 10);
+    
+    let nextPage: string | null = null;
+    let prevPage: string | null = null;
+
+    if (currentPage < totalPages) {
+      nextPage = `https://manhwaclan.com/?s=${encodeURIComponent(query)}&post_type=wp-manga&page=${currentPage + 1}`;
+    }
+
+    if (currentPage > 1) {
+      prevPage = `https://manhwaclan.com/?s=${encodeURIComponent(query)}&post_type=wp-manga&page=${currentPage - 1}`;
+    }
+
     if (results.length === 0) {
       throw new ERROR_FOUND('No results found for the search query.', 404);
     }
 
-    return results;
+    return {
+      results,
+      pagination: {
+        currentPage,
+        totalPages,
+        nextPage,
+        UrlApi_Next: nextPage ? `https://manhwa-clan.vercel.app/api/search/${encodeURIComponent(query)}/${currentPage + 1}` : null,
+        prevPage,
+        UrlApi_Prev: prevPage ? `https://manhwa-clan.vercel.app/api/search/${encodeURIComponent(query)}/${currentPage - 1}` : null,
+      }
+    };
   } catch (error) {
     if (axios.isAxiosError(error)) {
       throw new ERROR_FOUND(`Failed to search manga: ${error.response?.statusText || error.message}`, error.response?.status || 500);
@@ -211,12 +235,18 @@ app.get('/api/:name/details', async (req: Request, res: Response, next: NextFunc
   }
 });
 
-app.get('/api/search/:query', async (req: Request, res: Response, next: NextFunction) => {
-  const { query } = req.params;
+app.get('/api/search/:query/:page', async (req: Request, res: Response, next: NextFunction) => {
+  const { query, page } = req.params;
+
+  const pageNum = parseInt(page, 10);
+
+  if (isNaN(pageNum) || pageNum < 1) {
+    return res.status(400).json({ error: 'Invalid page number' });
+  }
 
   try {
-    const results = await search(decodeURIComponent(query));
-    res.json({ results });
+    const results = await search(decodeURIComponent(query), pageNum);
+    res.json(results);
   } catch (error) {
     next(error);
   }
