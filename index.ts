@@ -96,21 +96,12 @@ async function fetchDetails(title: string) {
 
     const mangaTitle = $('.post-title h1').text().trim();
     const summary = $('.summary_content .post-content p').text().trim();
-
-    //extracts the largest image URL from `srcset` 
-    const imageElement = $('.summary_image img');
-    const srcset = imageElement.attr('srcset');
-    let imageUrl = imageElement.attr('src'); // fallback to `src`
-
-    if (srcset) {
-      // Split `srcset` by commas, and takes the first item (usually the largest image), and split by space to get the URL
-      imageUrl = srcset.split(',')[0].split(' ')[0].trim();
-    }
+    const imageUrl = $('.summary_image img').attr('src');
 
     const rating = $('.post-total-rating .score').text().trim();
     const rank = $('.post-content_item:contains("Rank") .summary-content').text().trim();
     const alternative = $('.post-content_item:contains("Alternative") .summary-content').text().trim();
-    const genres = $('.genres-content a').map((_, el) => $(el).text().trim()).get();
+    const genres = $('.genres-content a').map((i, el) => $(el).text().trim()).get();
     const type = $('.post-content_item:contains("Type") .summary-content').text().trim();
     const status = $('.post-content_item:contains("Status") .summary-content').text().trim();
     const chapters = $('.wp-manga-chapter').length;
